@@ -1,5 +1,6 @@
 import argparse
 import random as rng
+import time
 
 import networkx as nx
 
@@ -38,6 +39,7 @@ def total_weight_of_sides(G, v, A, B):
 
 
 def local_search_maxcut_orig(G, A, B):
+    t_start = time.time()
     Anew = A[:]
     Bnew = B[:]
     cut = cut_calculator(G, A, B)
@@ -69,10 +71,13 @@ def local_search_maxcut_orig(G, A, B):
         cut = new_cut
         if same > 5:
             break
+    t_end = time.time()
+    print(f'Time elapsed: {t_end-t_start}')
     return Anew, Bnew
 
 
 def local_search_maxcut_kl(G, A, B):
+    t_start = time.time()
     Anew = A[:]
     Bnew = B[:]
     cut = cut_calculator(G, A, B)
@@ -96,7 +101,7 @@ def local_search_maxcut_kl(G, A, B):
                 flip_gain_of_node[NODE] = sum_own_side-sum_other_side
 
         sorted_nodes = sorted(flip_gain_of_node, key=flip_gain_of_node.get, reverse=True)
-        k = 3
+        k = 1
         for best_node in sorted_nodes[0:k]:
             if best_node not in flipped:
                 if best_node in Anew:
@@ -115,9 +120,12 @@ def local_search_maxcut_kl(G, A, B):
         if same > 10:
             break
 
+    t_end = time.time()
+    print(f'Time elapsed: {t_end-t_start}')
     return Anew, Bnew
 
 def local_search_maxcut(G, A, B):
+    t_start = time.time()
     Anew = A[:]
     Bnew = B[:]
     A_B = [*Anew, *Bnew]
@@ -152,7 +160,8 @@ def local_search_maxcut(G, A, B):
                 Anew = A_tmp.copy()
                 Bnew = B_tmp.copy()
                 print(f'New cut={new_cut}')
-
+    t_end = time.time()
+    print(f'Time elapsed: {t_end-t_start}')
     return Anew, Bnew
 
 
