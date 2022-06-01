@@ -198,6 +198,7 @@ parser.add_argument('-print_partition', action='store_true', help='Print the par
 SEED = 33
 rng = rng.Random(SEED)
 A, B = compute_partitions(G)
+
 print('Initiated local search')
 A, B = local_search_maxcut_kl(G, A, B)
 print('Local search finished')
