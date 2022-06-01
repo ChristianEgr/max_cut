@@ -40,9 +40,9 @@ def total_weight_of_sides(G, v, A, B):
 def local_search_maxcut_orig(G, A, B):
     Anew = A[:]
     Bnew = B[:]
-    CUT = cut_calculator(G, A, B)
+    cut = cut_calculator(G, A, B)
     same = 0
-    print(CUT )
+    print(cut)
     for i in range(50):
         for NODE in Anew:
             # Get the weigts for a specific node
@@ -52,11 +52,8 @@ def local_search_maxcut_orig(G, A, B):
                 # If so , flip (i.e remove node from A and put node to B)
                 Anew.remove(NODE)
                 Bnew.append(NODE)
-                # Calculate cut
-                #newCUT = cut_calculator(G, Anew, Bnew)
-                #print(f'New cut: {newCUT}')
         for NODE in Bnew:
-            # Get the weigts for a specific node
+            # Get the weights for a specific node
             (sum_own_side, sum_other_side) = total_weight_of_sides(G, NODE, Anew, Bnew)
             # Check if own sum weight >= other sum weight
             if sum_own_side > sum_other_side:
@@ -64,12 +61,12 @@ def local_search_maxcut_orig(G, A, B):
                 Bnew.remove(NODE)
                 Anew.append(NODE)
 
-        newCUT = cut_calculator(G, Anew, Bnew)
-        print(f'Cut: {newCUT}')
+        new_cut = cut_calculator(G, Anew, Bnew)
+        print(f'Cut: {new_cut}')
 
-        if newCUT == CUT:
+        if new_cut == cut:
             same += 1
-        CUT = newCUT
+        cut = new_cut
         if same > 5:
             break
     return Anew, Bnew
@@ -78,9 +75,10 @@ def local_search_maxcut_orig(G, A, B):
 def local_search_maxcut_kl(G, A, B):
     Anew = A[:]
     Bnew = B[:]
-    CUT = cut_calculator(G, A, B)
-    print(CUT)
+    cut = cut_calculator(G, A, B)
+    print(cut)
     flipped = []
+    same = 0
     for i in range(100):
         flip_gain_of_node = {}
         for NODE in Anew:
@@ -110,8 +108,15 @@ def local_search_maxcut_kl(G, A, B):
                     Anew.append(best_node)
                     Bnew.remove(best_node)
                 flipped.append(best_node)
-        CUT = cut_calculator(G, Anew, Bnew)
-        print(CUT)
+
+        new_cut = cut_calculator(G, Anew, Bnew)
+        print(new_cut)
+        if new_cut == cut:
+            same += 1
+        cut = new_cut
+        if same > 10:
+            break
+
     return Anew, Bnew
 
 def local_search_maxcut(G, A, B):
