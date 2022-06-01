@@ -86,18 +86,16 @@ def local_search_maxcut_kl(G, A, B):
             (sum_own_side, sum_other_side) = total_weight_of_sides(G, NODE, Anew, Bnew)
             # Check if own sum weight >= other sum weight
             if sum_own_side >= sum_other_side:
-                flip_gain_of_node[NODE] = sum_own_side
+                flip_gain_of_node[NODE] = sum_own_side-sum_other_side
 
         for NODE in Bnew:
             # Get the weights for a specific node
             (sum_own_side, sum_other_side) = total_weight_of_sides(G, NODE, Anew, Bnew)
             # Check if own sum weight >= other sum weight
             if sum_own_side >= sum_other_side:
-                flip_gain_of_node[NODE] = sum_own_side
+                flip_gain_of_node[NODE] = sum_own_side-sum_other_side
 
-        #best_node = max(flip_gain_of_node, key=flip_gain_of_node.get)
         sorted_nodes = sorted(flip_gain_of_node, key=flip_gain_of_node.get, reverse=False)
-
         k = 1
         for best_node in sorted_nodes[0:k]:
             if best_node not in flipped:
@@ -111,7 +109,7 @@ def local_search_maxcut_kl(G, A, B):
 
         new_cut = cut_calculator(G, Anew, Bnew)
         print(new_cut)
-        if new_cut == cut:
+        if new_cut <= cut:
             same += 1
         cut = new_cut
         if same > 10:
@@ -155,27 +153,6 @@ def local_search_maxcut(G, A, B):
                 Bnew = B_tmp.copy()
                 print(f'New cut={new_cut}')
 
-        # for j in range(0, len(B), k):
-        #     nodes = list()
-        #     if j+k <= len(B):
-        #         nodes = B[j:j+k]
-        #     else:
-        #         nodes = B[j:len(B)]
-        #     # Get the weights for a specific node
-        #     current_cut = cut_calculator(G, Anew, Bnew)
-        #     A_tmp = Anew.copy()
-        #     B_tmp = Bnew.copy()
-        #     B_tmp = [el for el in B_tmp if el not in nodes]
-        #     A_tmp.extend(nodes)
-        #     new_cut = cut_calculator(G, A_tmp, B_tmp)
-        #     # Check if cut is better
-        #     if new_cut > current_cut:
-        #         Anew = A_tmp.copy()
-        #         Bnew = B_tmp.copy()
-        #         print(f'New cut={new_cut}')
-
-    # Use this random number generator if necessary.
-    # For example rng.randint(0, 10) for a uniformly random integer r: 0 <= r <= 10
     return Anew, Bnew
 
 
