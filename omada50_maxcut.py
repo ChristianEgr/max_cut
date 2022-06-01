@@ -79,24 +79,24 @@ def local_search_maxcut_kl(G, A, B):
     print(cut)
     flipped = []
     same = 0
-    for i in range(100):
+    for i in range(1000):
         flip_gain_of_node = {}
         for NODE in Anew:
             # Get the weights for a specific node
             (sum_own_side, sum_other_side) = total_weight_of_sides(G, NODE, Anew, Bnew)
             # Check if own sum weight >= other sum weight
-            if sum_own_side >= sum_other_side:
+            if sum_own_side > sum_other_side:
                 flip_gain_of_node[NODE] = sum_own_side-sum_other_side
 
         for NODE in Bnew:
             # Get the weights for a specific node
             (sum_own_side, sum_other_side) = total_weight_of_sides(G, NODE, Anew, Bnew)
             # Check if own sum weight >= other sum weight
-            if sum_own_side >= sum_other_side:
+            if sum_own_side > sum_other_side:
                 flip_gain_of_node[NODE] = sum_own_side-sum_other_side
 
-        sorted_nodes = sorted(flip_gain_of_node, key=flip_gain_of_node.get, reverse=False)
-        k = 1
+        sorted_nodes = sorted(flip_gain_of_node, key=flip_gain_of_node.get, reverse=True)
+        k = 3
         for best_node in sorted_nodes[0:k]:
             if best_node not in flipped:
                 if best_node in Anew:
@@ -109,7 +109,7 @@ def local_search_maxcut_kl(G, A, B):
 
         new_cut = cut_calculator(G, Anew, Bnew)
         print(new_cut)
-        if new_cut <= cut:
+        if new_cut == cut:
             same += 1
         cut = new_cut
         if same > 10:
